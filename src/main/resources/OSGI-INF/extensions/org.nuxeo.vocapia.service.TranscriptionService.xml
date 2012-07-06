@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<component name="org.nuxeo.vocapia.service.TranscriptionService" version="1.0">
+
+  <implementation class="org.nuxeo.vocapia.service.TranscriptionService" />
+
+  
+    
+</component>

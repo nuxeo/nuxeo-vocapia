@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.vocapia.soundextraction">
+
+  <require>org.nuxeo.ecm.platform.commandline.executor.service.defaultContrib
+  </require>
+
+  <extension
+    target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent"
+    point="command">
+
+    <command name="ffmpeg-toany" enabled="true">
+      <commandLine>ffmpeg</commandLine>
+      <parameterString> -i #{inFilePath} -v 0 #{outFilePath}</parameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+
+  </extension>
+  
+  <extension target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl"
+    point="converter">
+    
+    <converter name="extractSoundAsMp3" class="org.nuxeo.vocapia.converter.Mp3Extractor">
+      <sourceMimeType>video/mpeg</sourceMimeType>
+      <sourceMimeType>video/mp4</sourceMimeType>
+      <sourceMimeType>video/quicktime</sourceMimeType>
+      <sourceMimeType>video/webm</sourceMimeType>
+      <sourceMimeType>video/x-ms-asf</sourceMimeType>
+      <sourceMimeType>video/x-msvideo</sourceMimeType>
+      <sourceMimeType>video/flv</sourceMimeType>
+      <destinationMimeType>video/ogg</destinationMimeType>
+      <parameters>
+        <parameter name="CommandLineName">ffmpeg-toany</parameter>
+      </parameters>
+    </converter>
+
+  </extension>
+
+</component>
