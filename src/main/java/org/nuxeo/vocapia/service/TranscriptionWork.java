@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.HttpClient;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
@@ -48,7 +49,7 @@ public class TranscriptionWork extends AbstractWork {
     
     protected final Map<String, String> longToShortLangCodes = new LinkedHashMap<String, String>();
 
-    public TranscriptionWork(DocumentLocation docLoc, String blobPropertyPath) {
+    public TranscriptionWork(DocumentLocation docLoc, String blobPropertyPath, HttpClient httpClient) {
         this.docLoc = docLoc;
         this.blobPropertyPath = blobPropertyPath;
         

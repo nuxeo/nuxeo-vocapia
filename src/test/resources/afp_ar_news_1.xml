@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AudioDoc name="afp_ar_news_1" path="afp_ar_news_1.mp3">
+  <ProcList>
+    <Proc name="vrbs_part" version="2.2"/>
+    <Proc name="vrbs_trans.ara" version="3.3"/>
+  </ProcList>
+  <ChannelList>
+    <Channel num="1" sigdur="79.52" spdur="67.71" nw="117" tconf="0.89"/>
+  </ChannelList>
+  <SpeakerList>
+    <Speaker ch="1" dur="57.20" gender="2" spkid="FS1" lang="ara" lconf="1.00" nw="101" tconf="0.94"/>
+    <Speaker ch="1" dur="10.11" gender="1" spkid="MS2" lang="ara" lconf="1.00" nw="15" tconf="0.61"/>
+    <Speaker ch="1" dur="0.40" gender="2" spkid="FT2" lang="ara" lconf="1.00" nw="1" tconf="0.99"/>
+  </SpeakerList>
+  <SegmentList>
+    <SpeechSegment ch="1" sconf="1.00" stime="0.01" etime="0.41" spkid="FT2" lang="ara" lconf="1.00" trs="1">
+      <Word stime="0.01" dur="0.10" conf="0.987"> أه </Word>
+    </SpeechSegment>
+    <SpeechSegment ch="1" sconf="1.00" stime="3.37" etime="18.66" spkid="FS1" lang="ara" lconf="1.00" trs="1">
+      <Word stime="3.37" dur="0.58" conf="0.983"> أسقطت </Word>
+      <Word stime="4.08" dur="0.51" conf="0.983"> اليابان </Word>
+      <Word stime="4.59" dur="0.88" conf="0.957"> وحلفاؤها </Word>
+      <Word stime="5.47" dur="0.62" conf="0.983"> اقتراحا </Word>
+      <Word stime="6.09" dur="0.75" conf="0.983"> أمريكيا </Word>
+      <Word stime="6.84" dur="0.63" conf="0.381"> اللاتينية </Word>
+      <Word stime="7.61" dur="0.38" conf="0.983"> يقضي </Word>
+      <Word stime="7.99" dur="0.71" conf="0.983"> بإنشاء </Word>
+      <Word stime="8.70" dur="0.52" conf="0.983"> ملاذ </Word>
+      <Word stime="9.22" dur="0.74" conf="0.691"> الحيتان </Word>
+      <Word stime="10.33" dur="0.12" conf="0.982"> في </Word>
+      <Word stime="10.45" dur="0.50" conf="0.982"> المحيط </Word>
+      <Word stime="10.95" dur="0.72" conf="0.983"> الأطلسي </Word>
+      <Word stime="11.67" dur="0.61" conf="0.817"> الجنوبي </Word>
+      <Word stime="12.65" dur="0.35" conf="0.983"> الأمر </Word>
+      <Word stime="13.00" dur="0.29" conf="0.983"> الذي </Word>
+      <Word stime="13.29" dur="0.51" conf="0.982"> أشعل </Word>
+      <Word stime="13.80" dur="0.82" conf="0.983"> توترات </Word>
+      <Word stime="14.62" dur="0.73" conf="0.983"> دولية </Word>
+      <Word stime="15.67" dur="0.39" conf="0.983"> حول </Word>
+      <Word stime="16.06" dur="0.33" conf="0.982"> صيد </Word>
+      <Word stime="16.39" dur="0.62" conf="0.983"> الحيتان </Word>
+      <Word stime="17.01" dur="0.44" conf="0.834"> الذي </Word>
+      <Word stime="17.45" dur="0.34" conf="0.983"> تقوم </Word>
+      <Word stime="17.88" dur="0.24" conf="0.983"> به </Word>
+      <Word stime="18.18" dur="0.43" conf="0.983"> طوكيو </Word>
+    </SpeechSegment>
+    <SpeechSegment ch="1" sconf="1.00" stime="21.35" etime="24.03" spkid="MS2" lang="ara" lconf="1.00" trs="1">
+      <Word stime="21.65" dur="0.19" conf="0.929"> ضد </Word>
+      <Word stime="23.18" dur="0.18" conf="0.422"> حكم </Word>
+      <Word stime="23.52" dur="0.44" conf="0.403"> ألماني </Word>
+    </SpeechSegment>
+    <SpeechSegment ch="1" sconf="1.00" stime="26.86" etime="29.42" spkid="MS2" lang="ara" lconf="1.00" trs="1">
+      <Word stime="26.95" dur="0.22" conf="0.927"> أن </Word>
+      <Word stime="27.22" dur="0.43" conf="0.927"> يكون </Word>
+      <Word stime="28.05" dur="0.27" conf="0.923"> الإنسان </Word>
+      <Word stime="28.72" dur="0.40" conf="0.373"> الأوروبية </Word>
+    </SpeechSegment>
+    <SpeechSegment ch="1" sconf="1.00" stime="29.91" etime="41.67" spkid="FS1" lang="ara" lconf="1.00" trs="1">
+      <Word stime="30.05" dur="0.52" conf="0.953"> لطالما </Word>
+      <Word stime="30.57" dur="0.39" conf="0.562"> استعاض </Word>
+      <Word stime="30.96" dur="0.79" conf="0.973"> اليابانيون </Word>
+      <Word stime="31.75" dur="0.61" conf="0.973"> الحيتان </Word>
+      <Word stime="32.62" dur="0.18" conf="0.973"> لا </Word>
+      <Word stime="32.80" dur="0.54" conf="0.973"> أفهم </Word>
+      <Word stime="33.34" dur="0.47" conf="0.973"> لماذا </Word>
+      <Word stime="33.81" dur="0.33" conf="0.596"> دول </Word>
+      <Word stime="34.28" dur="0.35" conf="0.973"> مثل </Word>
+      <Word stime="34.63" dur="0.56" conf="0.973"> أستراليا </Word>
+      <Word stime="35.19" dur="0.72" conf="0.962"> ونيوزيلندا </Word>
+      <Word stime="35.91" dur="0.61" conf="0.416"> منزعجة </Word>
+      <Word stime="36.52" dur="0.15" conf="0.973"> من </Word>
+      <Word stime="36.71" dur="0.32" conf="0.973"> ذلك </Word>
+      <Word stime="37.38" dur="0.24" conf="0.963"> إذا </Word>
+      <Word stime="37.62" dur="0.41" conf="0.968"> بدأت </Word>
+      <Word stime="38.16" dur="0.48" conf="0.973"> الاهتمام </Word>
+      <Word stime="38.76" dur="0.11" conf="0.691"> ب </Word>
+      <Word stime="38.87" dur="0.54" conf="0.777"> الحيتان </Word>
+      <Word stime="39.41" dur="0.59" conf="0.973"> فعليك </Word>
+      <Word stime="40.00" dur="0.62" conf="0.973"> الاهتمام </Word>
+      <Word stime="40.62" dur="0.30" conf="0.962"> بكل </Word>
+      <Word stime="41.00" dur="0.49" conf="0.570"> الحيوان </Word>
+    </SpeechSegment>
+    <SpeechSegment ch="1" sconf="1.00" stime="43.29" etime="48.16" spkid="MS2" lang="ara" lconf="1.00" trs="1">
+      <Word stime="43.29" dur="0.56" conf="0.427"> مومباي </Word>
+      <Word stime="43.85" dur="0.23" conf="0.319"> سرقوا </Word>
+      <Word stime="44.34" dur="0.16" conf="0.390"> القدرة </Word>
+      <Word stime="44.78" dur="0.29" conf="0.482"> لتقديم </Word>
+      <Word stime="45.53" dur="0.52" conf="0.679"> كراسي </Word>
+      <Word stime="46.11" dur="0.22" conf="0.876"> منذ </Word>
+      <Word stime="46.46" dur="0.20" conf="0.561"> ان </Word>
+      <Word stime="47.56" dur="0.30" conf="0.447"> سي </Word>
+    </SpeechSegment>
+    <SpeechSegment ch="1" sconf="1.00" stime="48.18" etime="78.33" spkid="FS1" lang="ara" lconf="1.00" trs="1">
+      <Word stime="48.29" dur="0.19" conf="0.970"> وفي </Word>
+      <Word stime="48.48" dur="0.55" conf="0.976"> اليابان </Word>
+      <Word stime="49.03" dur="0.47" conf="0.976"> عدد </Word>
+      <Word stime="49.50" dur="0.52" conf="0.976"> الحيتان </Word>
+      <Word stime="50.10" dur="0.29" conf="0.976"> التي </Word>
+      <Word stime="51.04" dur="0.60" conf="0.582"> محدود </Word>
+      <Word stime="51.71" dur="0.66" conf="0.976"> لذلك </Word>
+      <Word stime="52.37" dur="0.14" conf="0.975"> لا </Word>
+      <Word stime="52.51" dur="0.25" conf="0.976"> أرى </Word>
+      <Word stime="52.76" dur="0.49" conf="0.976"> سببا </Word>
+      <Word stime="53.65" dur="0.52" conf="0.962"> لنتوقف </Word>
+      <Word stime="54.31" dur="0.19" conf="0.975"> عن </Word>
+      <Word stime="54.50" dur="0.42" conf="0.975"> ذلك </Word>
+      <Word stime="55.86" dur="0.20" conf="0.976"> من </Word>
+      <Word stime="56.18" dur="0.47" conf="0.976"> جهتهم </Word>
+      <Word stime="56.65" dur="0.48" conf="0.971"> يقول </Word>
+      <Word stime="57.24" dur="0.44" conf="0.976"> خبراء </Word>
+      <Word stime="57.68" dur="0.39" conf="0.976"> البيئة </Word>
+      <Word stime="58.07" dur="0.59" conf="0.976"> وبينهم </Word>
+      <Word stime="58.66" dur="0.56" conf="0.971"> جمعية </Word>
+      <Word stime="59.22" dur="0.21" conf="0.972"> سي </Word>
+      <Word stime="60.60" dur="0.48" conf="0.966"> ومقرها </Word>
+      <Word stime="61.21" dur="0.54" conf="0.976"> الولايات </Word>
+      <Word stime="61.75" dur="0.68" conf="0.976"> المتحدة </Word>
+      <Word stime="62.83" dur="0.68" conf="0.976"> والذين </Word>
+      <Word stime="63.51" dur="0.51" conf="0.976"> عادة </Word>
+      <Word stime="64.02" dur="0.16" conf="0.976"> ما </Word>
+      <Word stime="64.18" dur="0.79" conf="0.976"> يهاجمون </Word>
+      <Word stime="64.97" dur="0.49" conf="0.962"> الرحلات </Word>
+      <Word stime="65.46" dur="0.66" conf="0.976"> اليابانية </Word>
+      <Word stime="66.28" dur="0.12" conf="0.976"> في </Word>
+      <Word stime="66.40" dur="0.39" conf="0.976"> القطب </Word>
+      <Word stime="66.79" dur="0.60" conf="0.976"> الجنوبي </Word>
+      <Word stime="67.74" dur="0.33" conf="0.970"> ان </Word>
+      <Word stime="68.07" dur="0.50" conf="0.976"> عددا </Word>
+      <Word stime="68.57" dur="0.52" conf="0.976"> قليلا </Word>
+      <Word stime="69.09" dur="0.17" conf="0.975"> من </Word>
+      <Word stime="69.30" dur="0.75" conf="0.976"> اليابانيين </Word>
+      <Word stime="70.05" dur="0.61" conf="0.975"> يأكلون </Word>
+      <Word stime="70.66" dur="0.30" conf="0.976"> لحم </Word>
+      <Word stime="70.96" dur="0.61" conf="0.976"> الحيتان </Word>
+      <Word stime="71.90" dur="0.40" conf="0.976"> وان </Word>
+      <Word stime="72.30" dur="0.47" conf="0.975"> موقف </Word>
+      <Word stime="72.77" dur="0.46" conf="0.976"> البلاد </Word>
+      <Word stime="73.23" dur="0.47" conf="0.972"> راهنا </Word>
+      <Word stime="74.11" dur="0.47" conf="0.962"> عائد </Word>
+      <Word stime="74.58" dur="0.30" conf="0.976"> إلى </Word>
+      <Word stime="74.88" dur="0.63" conf="0.975"> أوساط </Word>
+      <Word stime="75.51" dur="0.62" conf="0.976"> صناعة </Word>
+      <Word stime="76.13" dur="0.46" conf="0.976"> الصيد </Word>
+      <Word stime="76.98" dur="0.58" conf="0.761"> النافذة </Word>
+      <Word stime="77.56" dur="0.52" conf="0.975"> جدا </Word>
+    </SpeechSegment>
+  </SegmentList>
+</AudioDoc>

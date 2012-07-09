@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AudioDoc name="some_name" path="some_name.mp3">
+  <ProcList>
+    <Proc name="vrbs_part" version="2.2"/>
+    <Proc name="vrbs_trans.eng" version="3.3"/>
+  </ProcList>
+  <ChannelList>
+    <Channel num="1" sigdur="79.52" spdur="67.71" nw="117" tconf="0.89"/>
+  </ChannelList>
+  <SpeakerList>
+    <Speaker ch="1" dur="57.20" gender="2" spkid="FS1" lang="eng" lconf="1.00" nw="101" tconf="0.94"/>
+  </SpeakerList>
+  <SegmentList>
+    <SpeechSegment ch="1" sconf="1.00" stime="3.37" etime="18.66" spkid="FS1" lang="eng" lconf="1.00" trs="1">
+      <Word stime="3.37" dur="0.58" conf="0.983"> This </Word>
+      <Word stime="4.08" dur="0.51" conf="0.983"> is </Word>
+      <Word stime="4.59" dur="0.88" conf="0.957"> a </Word>
+      <Word stime="5.47" dur="0.62" conf="0.983"> test </Word>
+      <Word stime="6.09" dur="0.75" conf="0.983"> , </Word>
+      <Word stime="6.84" dur="0.63" conf="0.381"> with </Word>
+      <Word stime="7.61" dur="0.38" conf="0.983"> inadequate </Word>
+      <Word stime="7.99" dur="0.71" conf="0.983"> punctuation </Word>
+      <Word stime="8.70" dur="0.52" conf="0.983"> . </Word>
+      <Word stime="9.22" dur="0.74" conf="0.691"> Indeed </Word>
+      <Word stime="10.33" dur="0.12" conf="0.982"> . </Word>
+    </SpeechSegment>
+  </SegmentList>
+</AudioDoc>

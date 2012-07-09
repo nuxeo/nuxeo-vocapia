@@ -27,11 +27,11 @@ public class Transcription {
         // empty transcriptions for incremental building from service outcome
     }
 
-    public Transcription appendSection(int timecodeStart, int timecodeStop,
+    public Transcription appendSection(double timecodeStart, double timecodeStop,
             String text, String speakerId) {
         Map<String, Object> section = new HashMap<String, Object>();
-        section.put(TIMECODE_START, Integer.valueOf(timecodeStart));
-        section.put(TIMECODE_STOP, Integer.valueOf(timecodeStop));
+        section.put(TIMECODE_START, Double.valueOf(timecodeStart));
+        section.put(TIMECODE_STOP, Double.valueOf(timecodeStop));
         section.put(TEXT, text);
         section.put(SPEAKER_ID, speakerId);
         sections.add(section);
