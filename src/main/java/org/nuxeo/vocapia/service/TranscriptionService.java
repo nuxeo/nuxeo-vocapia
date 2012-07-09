@@ -4,6 +4,7 @@
 
 package org.nuxeo.vocapia.service;
 
+import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -38,6 +39,12 @@ public class TranscriptionService extends DefaultComponent {
 
     protected HttpClient httpClient;
 
+    protected URI serviceUrl;
+
+    protected String username;
+
+    protected String password;
+
     protected void initHttpClient() throws KeyManagementException,
             UnrecoverableKeyException, NoSuchAlgorithmException,
             KeyStoreException {
@@ -69,6 +76,14 @@ public class TranscriptionService extends DefaultComponent {
 
     @Override
     public void activate(ComponentContext context) throws Exception {
+        String url = System.getenv("NUXEO_VOCAPIA_SERVICE_URL");
+        if (url == null || url.isEmpty()) {
+            throw new RuntimeException(
+                    "NUXEO_VOCAPIA_SERVICE_URL environment variable is undefined");
+        }
+        serviceUrl = new URI(url);
+        username = System.getenv("NUXEO_VOCAPIA_SERVICE_USERNAME");
+        password = System.getenv("NUXEO_VOCAPIA_SERVICE_PASSWORD");
         initHttpClient();
     }
 
@@ -83,16 +98,17 @@ public class TranscriptionService extends DefaultComponent {
         httpClient = null;
     }
 
-    
     public void launchTranscription(DocumentLocation docLoc) {
         WorkManager workManager = Framework.getLocalService(WorkManager.class);
-        workManager.schedule(makeWork(docLoc), Scheduling.IF_NOT_RUNNING_OR_SCHEDULED);
+        workManager.schedule(makeWork(docLoc),
+                Scheduling.IF_NOT_RUNNING_OR_SCHEDULED);
     }
 
     private TranscriptionWork makeWork(DocumentLocation docLoc) {
-        return new TranscriptionWork(docLoc, MEDIA_BLOB_PATH, httpClient);
+        return new TranscriptionWork(docLoc, MEDIA_BLOB_PATH, httpClient,
+                serviceUrl, username, password);
     }
-    
+
     public TranscriptionStatus getTranscriptionStatus(DocumentLocation docLoc) {
         WorkManager workManager = Framework.getLocalService(WorkManager.class);
         Work work = makeWork(docLoc);

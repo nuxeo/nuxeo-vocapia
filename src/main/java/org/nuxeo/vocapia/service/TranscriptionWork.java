@@ -3,15 +3,23 @@ package org.nuxeo.vocapia.service;
 import static org.nuxeo.ecm.core.work.api.Work.State.FAILED;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
@@ -28,6 +36,7 @@ import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.services.streaming.FileSource;
 import org.nuxeo.runtime.services.streaming.StreamSource;
 import org.nuxeo.runtime.transaction.TransactionHelper;
+import org.nuxeo.vocapia.service.xml.AudioDoc;
 
 public class TranscriptionWork extends AbstractWork {
 
@@ -44,15 +53,29 @@ public class TranscriptionWork extends AbstractWork {
     protected final DocumentLocation docLoc;
 
     protected final String blobPropertyPath;
-    
+
+    protected final HttpClient httpClient;
+
     protected final Map<String, String> shortToLongLangCodes = new LinkedHashMap<String, String>();
-    
+
     protected final Map<String, String> longToShortLangCodes = new LinkedHashMap<String, String>();
 
-    public TranscriptionWork(DocumentLocation docLoc, String blobPropertyPath, HttpClient httpClient) {
+    protected URI serviceUrl;
+
+    protected String username;
+
+    protected String password;
+
+    public TranscriptionWork(DocumentLocation docLoc, String blobPropertyPath,
+            HttpClient httpClient, URI serviceUrl, String username,
+            String password) {
         this.docLoc = docLoc;
         this.blobPropertyPath = blobPropertyPath;
-        
+        this.httpClient = httpClient;
+        this.serviceUrl = serviceUrl;
+        this.username = username;
+        this.password = password;
+
         shortToLongLangCodes.put("ar", "ara");
         shortToLongLangCodes.put("en", "eng");
         shortToLongLangCodes.put("fr", "fre");
@@ -61,7 +84,7 @@ public class TranscriptionWork extends AbstractWork {
 
     protected void updateLongToShortLangCodes() {
         longToShortLangCodes.clear();
-        for (Map.Entry<String, String> entry: shortToLongLangCodes.entrySet()) {
+        for (Map.Entry<String, String> entry : shortToLongLangCodes.entrySet()) {
             longToShortLangCodes.put(entry.getValue(), entry.getKey());
         }
     }
@@ -173,12 +196,52 @@ public class TranscriptionWork extends AbstractWork {
     }
 
     protected String detectLanguage(Blob mp3) {
-        // TODO
-        return longToShortLangCodes.get("ara");
+        AudioDoc result = callService("lid", null, mp3);
+        String longLanguage = result.getLanguage();
+        if (longLanguage == null) {
+            return null;
+        }
+        return longToShortLangCodes.get(longLanguage);
     }
 
     protected Transcription performTranscription(Blob mp3, String language) {
-        return Transcription.emptyTranscription();
+        AudioDoc result = callService("trans",
+                shortToLongLangCodes.get(language), mp3);
+        return result.asTranscription();
+    }
+
+    protected AudioDoc callService(String method, String model,
+            Blob audioContent) {
+        String url = String.format("%s?method=%s", serviceUrl, method);
+        if (model != null) {
+            model += String.format("&model=%s", model);
+        }
+        HttpPost post = new HttpPost(url);
+        try {
+            if (username != null && password != null) {
+                String credentials = Base64.encodeBase64String((username + ":" + password).getBytes(Charset.forName("UTF-8")));
+                post.setHeader("Authorization", "Basic " + credentials);
+            }
+            post.setHeader("Content-Type", audioContent.getMimeType());
+            post.setEntity(new InputStreamEntity(audioContent.getStream(),
+                    audioContent.getLength()));
+            HttpResponse response = httpClient.execute(post);
+            InputStream content = response.getEntity().getContent();
+            String body = IOUtils.toString(content);
+            content.close();
+            if (response.getStatusLine().getStatusCode() == 200) {
+                return AudioDoc.readFrom(body);
+            } else {
+                String errorMsg = String.format(
+                        "Unexpected response from '%s': %s\n %s", url,
+                        response.getStatusLine().toString(), body);
+                throw new IOException(errorMsg);
+            }
+        } catch (Exception e) {
+            post.abort();
+            throw new RuntimeException(String.format(
+                    "Error connecting to '%s': %s", url, e.getMessage()), e);
+        }
     }
 
     protected void saveResults(final String detectedLanguage,
