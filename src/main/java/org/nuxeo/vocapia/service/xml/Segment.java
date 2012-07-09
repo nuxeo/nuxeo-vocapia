@@ -1,5 +1,5 @@
 /* Copyright 2011 Nuxeo and contributors.
- * 
+ *
  * This file is licensed to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
@@ -29,31 +29,33 @@ public class Segment {
 
     protected Double endTime;
 
+    protected String language;
+
     protected ArrayList<Word> words = new ArrayList<Word>();
 
     @XmlAttribute(name = "spkid")
     public String getSpeakerId() {
         return speakerId;
     }
-    
+
     public void setSpeakerId(String speakerId) {
         this.speakerId = speakerId;
     }
-    
+
     @XmlAttribute(name = "stime")
     public Double getStartTime() {
         return startTime;
     }
-    
+
     public void setStartTime(Double startTime) {
         this.startTime = startTime;
     }
-    
+
     @XmlAttribute(name = "etime")
     public Double getEndTime() {
         return endTime;
     }
-    
+
     public void setEndTime(Double endTime) {
         this.endTime = endTime;
     }
@@ -81,5 +83,17 @@ public class Segment {
         }
         return sb.toString().trim();
     }
-    
+
+    public Double getDuration() {
+        return endTime - startTime;
+    }
+
+    @XmlAttribute(name = "lang")
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 }

@@ -18,7 +18,7 @@ public class TestTranscriptionParsing {
     @Test
     public void testArabicTranscription() throws JAXBException {
         InputStream stream = getClass().getResourceAsStream(
-                "/afp_ar_news_1.xml");
+                "/afp_ar_news_1_trans.xml");
         AudioDoc parsedDoc = AudioDoc.readFrom(stream);
         ArrayList<Segment> segments = parsedDoc.getSegments();
         assertEquals(segments.size(), 7);
@@ -48,4 +48,13 @@ public class TestTranscriptionParsing {
         assertEquals(transcription.getSections().size(), 1);
     }
 
+    
+    @Test
+    public void testLanguageIdOutput() throws JAXBException {
+        InputStream stream = getClass().getResourceAsStream(
+                "/afp_ar_news_1_lid.xml");
+        AudioDoc parsedDoc = AudioDoc.readFrom(stream);
+        String lang = parsedDoc.getLanguage();
+        assertEquals(lang, "ara");
+    }
 }

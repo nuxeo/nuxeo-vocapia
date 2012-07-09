@@ -63,4 +63,24 @@ public class AudioDoc {
         }
         return transcription;
     }
+
+    /**
+     * @return the language code of the longest segment
+     */
+    public String getLanguage() {
+        Segment longest = null;
+        for (Segment segment: segments) {
+            if (longest == null) {
+                longest = segment;
+            } else {
+                if (longest.getDuration() < segment.getDuration()) {
+                    longest = segment;
+                }
+            }
+        }
+        if (longest == null) {
+            return null;
+        }
+        return longest.getLanguage();
+    }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AudioDoc name="afp_ar_news_1" path="afp_ar_news_1.mp3">
+<ProcList>
+<Proc name="vrbs_part" version="2.2"/>
+<Proc name="vrbs_lid" version="4.1" editor="Vocapia Research"/>
+</ProcList>
+<ChannelList>
+<Channel num="1" sigdur="79.52" spdur="70.34"/>
+</ChannelList>
+<SpeakerList>
+<Speaker ch="1" dur="57.20" gender="2" spkid="FS1" lang="ara" lconf="0.64"/>
+<Speaker ch="1" dur="10.99" gender="1" spkid="MS2" lang="ara" lconf="0.64"/>
+<Speaker ch="1" dur="1.66" gender="2" spkid="FT2" lang="ara" lconf="0.64"/>
+<Speaker ch="1" dur="0.49" gender="2" spkid="FS2"/>
+</SpeakerList>
+<SegmentList>
+<SpeechSegment ch="1" sconf="1.00" stime="0.01" etime="1.67" spkid="FT2" lang="ara" lconf="0.64"/>
+<SpeechSegment ch="1" sconf="1.00" stime="3.37" etime="18.66" spkid="FS1" lang="ara" lconf="0.64"/>
+<SpeechSegment ch="1" sconf="1.00" stime="20.98" etime="24.03" spkid="MS2" lang="ara" lconf="0.64"/>
+<SpeechSegment ch="1" sconf="1.00" stime="26.86" etime="29.91" spkid="MS2" lang="ara" lconf="0.64"/>
+<SpeechSegment ch="1" sconf="1.00" stime="29.91" etime="41.67" spkid="FS1" lang="ara" lconf="0.64"/>
+<SpeechSegment ch="1" sconf="1.00" stime="41.67" etime="42.16" spkid="FS2"/>
+<SpeechSegment ch="1" sconf="1.00" stime="43.29" etime="48.18" spkid="MS2" lang="ara" lconf="0.64"/>
+<SpeechSegment ch="1" sconf="1.00" stime="48.18" etime="78.33" spkid="FS1" lang="ara" lconf="0.64"/>
+</SegmentList>
+</AudioDoc>
