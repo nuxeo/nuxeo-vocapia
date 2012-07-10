@@ -4,6 +4,8 @@
 
   <implementation class="org.nuxeo.vocapia.service.TranscriptionService" />
 
-  
+  <service>
+    <provide interface="org.nuxeo.vocapia.service.TranscriptionService" />
+  </service>
     
 </component>

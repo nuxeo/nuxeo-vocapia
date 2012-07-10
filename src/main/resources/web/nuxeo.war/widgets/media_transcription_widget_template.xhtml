@@ -14,13 +14,13 @@
   <h3 class="summaryTitle">#{messages['heading.speechTranscription']}</h3>
 
   <nxu:set var="transcriptionStatus"
-    value="#{transcriptionActions.getTranscriptionStatus(value, 'file:content')}">
+    value="#{transcriptionActions.getTranscriptionStatus(value)}">
     <c:if test="#{not empty transcriptionStatus}">
       #{transcriptionAction.getStatusMessageFor(transcriptionStatus)}
     </c:if>
     <c:if test="#{empty transcriptionStatus}">
       <h:commandButton value="#{messages['action.media.launchTranscription']}"
-        action="#{transcriptionActions.launchTranscription(value, 'file:content')}"
+        action="#{transcriptionActions.launchTranscription(value)}"
         class="button smallButton" />
     </c:if>
   </nxu:set>

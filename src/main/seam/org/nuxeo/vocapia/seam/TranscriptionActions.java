@@ -8,13 +8,18 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.platform.ui.web.invalidations.AutomaticDocumentBasedInvalidation;
+import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.vocapia.service.TranscriptionService;
+import org.nuxeo.vocapia.service.TranscriptionStatus;
 
 /**
  * Launch and monitor progress of video / audio files transcriptions.
  */
-@Name("transcriprtionActions")
+@Name("transcriptionActions")
 @Scope(ScopeType.EVENT)
 @AutomaticDocumentBasedInvalidation
 public class TranscriptionActions implements Serializable {
@@ -29,6 +34,18 @@ public class TranscriptionActions implements Serializable {
 
     @In(create = true, required = false)
     protected transient FacesMessages facesMessages;
-    
+
+    public void launchTranscription(DocumentModel doc) {
+        TranscriptionService service = Framework.getLocalService(TranscriptionService.class);
+        service.launchTranscription(new DocumentLocationImpl(doc));
+    }
+
+    public TranscriptionStatus getTranscriptionStatus(DocumentModel doc) {
+        TranscriptionService service = Framework.getLocalService(TranscriptionService.class);
+        if (service == null) {
+            return null;
+        }
+        return service.getTranscriptionStatus(new DocumentLocationImpl(doc));
+    }
 
 }
