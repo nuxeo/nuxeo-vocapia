@@ -8,6 +8,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.nuxeo.ide.SDK_CONTAINER"/>
 	<classpathentry kind="con" path="org.nuxeo.ide.SDK_TEST_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/nuxeo-platform-video-convert"/>
 	<classpathentry kind="output" path="bin/main"/>
 </classpath>
