@@ -189,7 +189,7 @@ public class TranscriptionWork extends AbstractWork {
     }
 
     protected String detectLanguage(Blob mp3) {
-        AudioDoc result = callService("lid", null, mp3);
+        AudioDoc result = callService("vrbs_lid", null, mp3);
         String longLanguage = result.getLanguage();
         if (longLanguage == null) {
             return null;
@@ -198,18 +198,20 @@ public class TranscriptionWork extends AbstractWork {
     }
 
     protected Transcription performTranscription(Blob mp3, String language) {
-        AudioDoc result = callService("trans",
+        AudioDoc result = callService("vrbs_trans",
                 shortToLongLangCodes.get(language), mp3);
         return result.asTranscription();
     }
 
     protected AudioDoc callService(String method, String model,
             Blob audioContent) {
-        String url = String.format("%s?method=%s", serviceUrl, method);
+        String url = String.format("%s?method=%s&audiofile=soundtrack.mp3", serviceUrl, method);
         if (model != null) {
             model += String.format("&model=%s", model);
         }
         HttpPost post = new HttpPost(url);
+        post.getParams().setBooleanParameter("http.protocol.expect-continue", true);
+        
         try {
             if (username != null && password != null) {
                 String credentials = Base64.encodeBase64String((username + ":" + password).getBytes(Charset.forName("UTF-8")));
