@@ -2,6 +2,7 @@ package org.nuxeo.vocapia.service;
 
 import static org.nuxeo.ecm.core.work.api.Work.State.FAILED;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.FileEntity;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
@@ -147,15 +148,7 @@ public class TranscriptionWork extends AbstractWork {
                 return;
             }
         } finally {
-            // Delete temporary extracted file
-            if (mp3 instanceof StreamingBlob) {
-                StreamSource source = ((StreamingBlob) mp3).getStreamSource();
-                if (source instanceof FileSource) {
-                    FileUtils.deleteQuietly(((FileSource) source).getFile());
-                }
-            } else if (mp3 instanceof FileBlob) {
-                FileUtils.deleteQuietly(((FileBlob) mp3).getFile());
-            }
+            FileUtils.deleteQuietly(getBackingFile(mp3));
         }
 
         // Save the results back on the document in a new, short-lived
@@ -223,8 +216,7 @@ public class TranscriptionWork extends AbstractWork {
                 post.setHeader("Authorization", "Basic " + credentials);
             }
             post.setHeader("Content-Type", audioContent.getMimeType());
-            post.setEntity(new InputStreamEntity(audioContent.getStream(),
-                    audioContent.getLength()));
+            post.setEntity(new FileEntity(getBackingFile(audioContent), audioContent.getMimeType()));
             HttpResponse response = httpClient.execute(post);
             InputStream content = response.getEntity().getContent();
             String body = IOUtils.toString(content);
@@ -242,6 +234,19 @@ public class TranscriptionWork extends AbstractWork {
             throw new RuntimeException(String.format(
                     "Error connecting to '%s': %s", url, e.getMessage()), e);
         }
+    }
+
+    protected File getBackingFile(Blob audioContent) {
+        // Delete temporary extracted file
+        if (audioContent instanceof StreamingBlob) {
+            StreamSource source = ((StreamingBlob) audioContent).getStreamSource();
+            if (source instanceof FileSource) {
+                return ((FileSource) source).getFile();
+            }
+        } else if (audioContent instanceof FileBlob) {
+            return ((FileBlob) audioContent).getFile();
+        }
+        return  null;
     }
 
     protected void saveResults(final String detectedLanguage,

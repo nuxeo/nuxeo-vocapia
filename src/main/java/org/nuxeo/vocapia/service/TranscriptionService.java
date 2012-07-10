@@ -65,8 +65,10 @@ public class TranscriptionService extends DefaultComponent {
         schemeRegistry.register(new Scheme("http", 80,
                 PlainSocketFactory.getSocketFactory()));
 
-        SSLSocketFactory sslsf = new SSLSocketFactory(blindTrust);
+        SSLSocketFactory sslsf = new SSLSocketFactory(blindTrust,
+                SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         schemeRegistry.register(new Scheme("https", 443, sslsf));
+        schemeRegistry.register(new Scheme("https", 8093, sslsf));
 
         // Create an HttpClient with the ThreadSafeClientConnManager.
         // This connection manager must be used if more than one thread will
