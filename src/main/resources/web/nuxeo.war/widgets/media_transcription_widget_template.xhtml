@@ -11,47 +11,19 @@
 
   <c:if test="#{value.hasFacet('Video')}">
 
-  <h3 class="summaryTitle">#{messages['heading.videoConversions']}</h3>
+  <h3 class="summaryTitle">#{messages['heading.speechTranscription']}</h3>
 
-  <table width="100%" cellspacing="0">
-    <tbody>
-      <c:forEach var="conversion" items="#{videoService.getAvailableVideoConversions()}"
-        varStatus="status">
-        <tr class="videoConversionRow">
-          <td class="labelColumn">
-            <c:if test="#{status.index == 0}">
-            #{messages['label.widget.video.format']}
-            </c:if>
-          </td>
-          <td class="fieldColumn">
-            #{conversion.name}
-          </td>
-          <td class="actionsColumn">
-            <nxu:set var="conversionStatus"
-              value="#{videoActions.getVideoConversionStatus(value, conversion.name)}">
-              <c:if test="#{not empty conversionStatus}">
-                #{videoActions.getStatusMessageFor(conversionStatus)}
-              </c:if>
-              <c:if test="#{empty conversionStatus}">
-                <nxu:set var="transcodedVideo"
-                  value="#{videoActions.getTranscodedVideo(value, conversion.name)}">
-                <c:if test="#{not empty transcodedVideo}">
-                  <h:outputLink value="#{videoActions.getTranscodedVideoURL(value, conversion.name)}">
-                    <h:graphicImage url="/icons/download.png" />
-                  </h:outputLink>
-                </c:if>
-                <c:if test="#{empty transcodedVideo}">
-                  <h:commandButton value="#{messages['action.video.launch.conversion']}"
-                    action="#{videoActions.launchConversion(value, conversion.name)}" class="button smallButton" />
-                </c:if>
-                </nxu:set>
-              </c:if>
-            </nxu:set>
-          </td>
-        </tr>
-      </c:forEach>
-    </tbody>
-  </table>
+  <nxu:set var="transcriptionStatus"
+    value="#{transcriptionActions.getTranscriptionStatus(value, 'file:content')}">
+    <c:if test="#{not empty transcriptionStatus}">
+      #{transcriptionAction.getStatusMessageFor(transcriptionStatus)}
+    </c:if>
+    <c:if test="#{empty transcriptionStatus}">
+      <h:commandButton value="#{messages['action.media.launchTranscription']}"
+        action="#{transcriptionActions.launchTranscription(value, 'file:content')}"
+        class="button smallButton" />
+    </c:if>
+  </nxu:set>
 
   </c:if>
 

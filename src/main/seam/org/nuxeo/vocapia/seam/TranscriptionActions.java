@@ -17,7 +17,7 @@ import org.nuxeo.ecm.platform.ui.web.invalidations.AutomaticDocumentBasedInvalid
 @Name("transcriprtionActions")
 @Scope(ScopeType.EVENT)
 @AutomaticDocumentBasedInvalidation
-public class TranscriprtionActionsBean implements Serializable {
+public class TranscriptionActions implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,5 +29,6 @@ public class TranscriprtionActionsBean implements Serializable {
 
     @In(create = true, required = false)
     protected transient FacesMessages facesMessages;
+    
 
 }

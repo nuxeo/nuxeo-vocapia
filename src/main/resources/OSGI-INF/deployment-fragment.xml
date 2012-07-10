@@ -11,9 +11,9 @@
     
     <delete path="${bundle.fileName}.tmp"/>
     <unzip from="${bundle.fileName}" to="${bundle.fileName}.tmp" prefix="OSGI-INF/l10n">
-      <include>OSGI-INF/l10n/*-messages.properties</include>
+      <include>OSGI-INF/l10n/*.properties</include>
     </unzip>
-    <append from="${bundle.fileName}.tmp" pattern="*-messages.properties" to="nuxeo.war/WEB-INF/classes/messages.properties" addNewLine="true"/>
+    <append from="${bundle.fileName}.tmp" pattern="*.properties" to="nuxeo.war/WEB-INF/classes/messages.properties" addNewLine="true"/>
     <delete path="${bundle.fileName}.tmp"/>
   </install>
 
