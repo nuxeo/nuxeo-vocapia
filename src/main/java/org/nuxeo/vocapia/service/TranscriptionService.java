@@ -31,7 +31,9 @@ import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
- * Shedule the conversion of video and audio files and monitor progress.
+ * Schedule the transcription of video and audio files and monitor progress. As
+ * the processing is asynchronous, the results is stored directly on the
+ * document in a dedicated facet's schema.
  */
 public class TranscriptionService extends DefaultComponent {
 
