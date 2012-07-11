@@ -19,14 +19,10 @@
 
   <xs:complexType name="section">
     <xs:sequence>
-      <xs:element name="text" type="nxs:longString" minOccurs="0"
-        maxOccurs="unbounded" />
-      <xs:element name="timecode_start" type="xs:float" minOccurs="0"
-        maxOccurs="unbounded" />
-      <xs:element name="timecode_stop" type="xs:float" minOccurs="0"
-        maxOccurs="unbounded" />
-      <xs:element name="speaker_id" type="xs:string" minOccurs="0"
-        maxOccurs="unbounded" />
+      <xs:element name="text" type="nxs:longString" />
+      <xs:element name="timecode_start" type="xs:float" />  <!-- in seconds -->
+      <xs:element name="timecode_stop"  type="xs:float" />  <!-- in seconds -->
+      <xs:element name="speaker_id" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
 
