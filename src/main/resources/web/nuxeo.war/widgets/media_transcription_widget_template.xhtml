@@ -9,14 +9,22 @@
      xmlns:nxd="http://nuxeo.org/nxweb/document"
      class="content_block">
 
-  <c:if test="#{value.hasFacet('Video')}">
-
   <h3 class="summaryTitle">#{messages['heading.speechTranscription']}</h3>
 
+  <c:if test="#{value.hasFacet('HasSpeechTranscription')}">
+  <div class="transcription" style="max-height: 400px; overflow: scroll; margin-bottom: 2em">
+    <ui:repeat value="#{value.trans.sections}" var="section">
+      <p dir="#{value.dc.language == 'ar' ? 'RTL' : 'LTR'}">
+        <h:outputText value="#{section.text}" /></p>
+    </ui:repeat>
+  </div>
+  </c:if>
+
+  <p>
   <nxu:set var="transcriptionStatus"
     value="#{transcriptionActions.getTranscriptionStatus(value)}">
     <c:if test="#{not empty transcriptionStatus}">
-      #{transcriptionAction.getStatusMessageFor(transcriptionStatus)}
+      #{transcriptionActions.getStatusMessageFor(transcriptionStatus)}
     </c:if>
     <c:if test="#{empty transcriptionStatus}">
       <h:commandButton value="#{messages['action.media.launchTranscription']}"
@@ -24,7 +32,6 @@
         class="button smallButton" />
     </c:if>
   </nxu:set>
-
-  </c:if>
+  </p>
 
 </div>

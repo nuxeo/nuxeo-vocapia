@@ -1,12 +1,13 @@
 package org.nuxeo.vocapia.seam;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.core.Interpolator;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
@@ -32,8 +33,8 @@ public class TranscriptionActions implements Serializable {
     @In(create = true)
     protected NavigationContext navigationContext;
 
-    @In(create = true, required = false)
-    protected transient FacesMessages facesMessages;
+    @In(create = true)
+    private Map<String, String> messages;
 
     public void launchTranscription(DocumentModel doc) {
         TranscriptionService service = Framework.getLocalService(TranscriptionService.class);
@@ -46,6 +47,15 @@ public class TranscriptionActions implements Serializable {
             return null;
         }
         return service.getTranscriptionStatus(new DocumentLocationImpl(doc));
+    }
+
+    public String getStatusMessageFor(TranscriptionStatus status) {
+        if (status == null) {
+            return "";
+        }
+        String message = messages.get("status.transcription." + status.status);
+        return Interpolator.instance().interpolate(message,
+                status.position, status.queueSize);
     }
 
 }
