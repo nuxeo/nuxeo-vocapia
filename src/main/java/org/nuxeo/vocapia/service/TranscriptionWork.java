@@ -120,10 +120,14 @@ public class TranscriptionWork extends AbstractWork {
             TransactionHelper.commitOrRollbackTransaction();
         }
 
-        // Convert the soundtrack of the source media as MP3 for submission to
-        // the transcription service
-        setStatus("soundtrack_extraction");
-        Blob mp3 = extractSoundTrack(sourceMedia);
+        Blob audioContent = sourceMedia;
+        if ("audio/mpeg".equals(audioContent.getMimeType())) {
+            // Convert the soundtrack of the source media as MP3 for submission
+            // to
+            // the transcription service
+            setStatus("soundtrack_extraction");
+            audioContent = extractSoundTrack(sourceMedia);
+        }
         if (isSuspending()) {
             return;
         }
@@ -135,7 +139,7 @@ public class TranscriptionWork extends AbstractWork {
             // detect it
             if (language == null || language.trim().isEmpty()) {
                 setStatus("language_detection");
-                detectedLanguage = detectLanguage(mp3);
+                detectedLanguage = detectLanguage(audioContent);
                 language = detectedLanguage;
                 if (isSuspending()) {
                     return;
@@ -143,12 +147,14 @@ public class TranscriptionWork extends AbstractWork {
             }
             // Perform the actual transcription
             setStatus("speech_transcription");
-            transcription = performTranscription(mp3, language);
+            transcription = performTranscription(audioContent, language);
             if (isSuspending()) {
                 return;
             }
         } finally {
-            FileUtils.deleteQuietly(getBackingFile(mp3));
+            if (audioContent != sourceMedia) {
+                FileUtils.deleteQuietly(getBackingFile(audioContent));
+            }
         }
 
         // Save the results back on the document in a new, short-lived
