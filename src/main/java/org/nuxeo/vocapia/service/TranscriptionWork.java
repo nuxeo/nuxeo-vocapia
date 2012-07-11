@@ -19,8 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
@@ -188,8 +189,8 @@ public class TranscriptionWork extends AbstractWork {
         return result.getBlob().persist();
     }
 
-    protected String detectLanguage(Blob mp3) {
-        AudioDoc result = callService("vrbs_lid", null, mp3);
+    protected String detectLanguage(Blob mediaContent) {
+        AudioDoc result = callService("vrbs_lid", null, mediaContent);
         String longLanguage = result.getLanguage();
         if (longLanguage == null) {
             return null;
@@ -197,29 +198,36 @@ public class TranscriptionWork extends AbstractWork {
         return longToShortLangCodes.get(longLanguage);
     }
 
-    protected Transcription performTranscription(Blob mp3, String language) {
+    protected Transcription performTranscription(Blob mediaContent,
+            String language) {
         AudioDoc result = callService("vrbs_trans",
-                shortToLongLangCodes.get(language), mp3);
+                shortToLongLangCodes.get(language), mediaContent);
         return result.asTranscription();
     }
 
     protected AudioDoc callService(String method, String model,
             Blob audioContent) {
-        String url = String.format("%s?method=%s&audiofile=soundtrack.mp3", serviceUrl, method);
+        String url = String.format("%s?method=%s&audiofile=soundtrack.mp3",
+                serviceUrl, method);
         if (model != null) {
-            model += String.format("&model=%s", model);
+            url += String.format("&model=%s", model);
         }
-        HttpPost post = new HttpPost(url);
-        post.getParams().setBooleanParameter("http.protocol.expect-continue", true);
-        
+        HttpPut request = new HttpPut(url);
+        request.getParams().setBooleanParameter("http.protocol.expect-continue",
+                true);
+
         try {
             if (username != null && password != null) {
                 String credentials = Base64.encodeBase64String((username + ":" + password).getBytes(Charset.forName("UTF-8")));
-                post.setHeader("Authorization", "Basic " + credentials);
+                // trim is necessary to remove the trailing CRLF appended by
+                // Base64.encodeBase64String for some reason...
+                request.setHeader("Authorization",
+                        "Basic " + credentials.trim());
             }
-            post.setHeader("Content-Type", audioContent.getMimeType());
-            post.setEntity(new FileEntity(getBackingFile(audioContent), audioContent.getMimeType()));
-            HttpResponse response = httpClient.execute(post);
+            request.setHeader("Accept", "*/*");
+            request.setHeader("Content-Type", audioContent.getMimeType());
+            request.setEntity(new ByteArrayEntity(audioContent.getByteArray()));
+            HttpResponse response = httpClient.execute(request);
             InputStream content = response.getEntity().getContent();
             String body = IOUtils.toString(content);
             content.close();
@@ -232,7 +240,7 @@ public class TranscriptionWork extends AbstractWork {
                 throw new IOException(errorMsg);
             }
         } catch (Exception e) {
-            post.abort();
+            request.abort();
             throw new RuntimeException(String.format(
                     "Error connecting to '%s': %s", url, e.getMessage()), e);
         }
@@ -248,7 +256,7 @@ public class TranscriptionWork extends AbstractWork {
         } else if (audioContent instanceof FileBlob) {
             return ((FileBlob) audioContent).getFile();
         }
-        return  null;
+        return null;
     }
 
     protected void saveResults(final String detectedLanguage,
