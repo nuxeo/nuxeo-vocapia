@@ -47,28 +47,29 @@ public class TranscriptionService extends DefaultComponent {
 
     protected String password;
 
-    protected void initHttpClient() throws KeyManagementException,
-            UnrecoverableKeyException, NoSuchAlgorithmException,
-            KeyStoreException {
-        // Trust self signed certificates
-        TrustStrategy blindTrust = new TrustStrategy() {
-
-            @Override
-            public boolean isTrusted(X509Certificate[] chain, String authType)
-                    throws CertificateException {
-                return true;
-            }
-        };
+    protected void initHttpClient(URI serviceUrl)
+            throws KeyManagementException, UnrecoverableKeyException,
+            NoSuchAlgorithmException, KeyStoreException {
 
         // Create and initialize a scheme registry
         SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", 80,
-                PlainSocketFactory.getSocketFactory()));
-
-        SSLSocketFactory sslsf = new SSLSocketFactory(blindTrust,
-                SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        schemeRegistry.register(new Scheme("https", 443, sslsf));
-        schemeRegistry.register(new Scheme("https", 8093, sslsf));
+        if ("https".equals(serviceUrl.getScheme())) {
+            // Trust self signed certificates
+            TrustStrategy blindTrust = new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] chain,
+                        String authType) throws CertificateException {
+                    return true;
+                }
+            };
+            SSLSocketFactory sslsf = new SSLSocketFactory(blindTrust,
+                    SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            schemeRegistry.register(new Scheme(serviceUrl.getScheme(),
+                    serviceUrl.getPort(), sslsf));
+        } else {
+            schemeRegistry.register(new Scheme(serviceUrl.getScheme(),
+                    serviceUrl.getPort(), PlainSocketFactory.getSocketFactory()));
+        }
 
         // Create an HttpClient with the ThreadSafeClientConnManager.
         // This connection manager must be used if more than one thread will
@@ -88,7 +89,7 @@ public class TranscriptionService extends DefaultComponent {
         serviceUrl = new URI(url);
         username = System.getenv("NUXEO_VOCAPIA_SERVICE_USERNAME");
         password = System.getenv("NUXEO_VOCAPIA_SERVICE_PASSWORD");
-        initHttpClient();
+        initHttpClient(serviceUrl);
     }
 
     @Override
