@@ -8,7 +8,7 @@
 
     <widgetType name="media_transcription">
       <documentation>
-        This widget displays the transcribed text of the soundtrack of the media file.
+        This widget displays the transcribed text of the sound track of the media file.
       </documentation>
 
       <handler-class>
