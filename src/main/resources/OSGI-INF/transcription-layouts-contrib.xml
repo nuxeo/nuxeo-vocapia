@@ -8,7 +8,9 @@
 
     <widgetType name="media_transcription">
       <documentation>
-        This widget displays the transcribed text of the sound track of the media file.
+        This widget displays the transcribed text of the
+        sound track of the
+        media file.
       </documentation>
 
       <handler-class>
@@ -22,72 +24,24 @@
   </extension>
 
   <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
-      point="widgets">
+    point="widgets">
     <widget name="summary_media_transcription" type="media_transcription" />
   </extension>
 
-  <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
-    point="layouts">
-    <layout name="video_summary_layout">
-      <templates>
-        <template mode="any">/layouts/layout_summary_template.xhtml</template>
-      </templates>
-      <rows>
-        <row>
-          <widget>summary_video_player</widget>
-          <!-- full layout override to insert the following widget -->
-          <widget>summary_media_transcription</widget>
-          <widget>summary_current_document_files</widget>
-          <widget>summary_video_conversions</widget>
-          <widget>summary_current_document_comments</widget>
-        </row>
-        <row>
-          <widget>summary_current_document_description</widget>
-          <widget>summary_current_document_states</widget>
-          <widget>summary_current_document_contributors</widget>
-          <widget>summary_video_storyboard</widget>
-          <widget>summary_video_info</widget>
-          <widget>summary_current_document_tagging</widget>
-          <widget>summary_current_document_relations</widget>
-        </row>
-        <row>
-          <widget>summary_current_document_publications</widget>
-        </row>
-        <row>
-          <widget>summary_current_document_single_tasks</widget>
-        </row>
-      </rows>
-      <widget name="summary_current_document_entities"
-       type="summary_current_document_entities"/>
-    </layout>
-    
-    <layout name="audio_summary_layout">
-      <templates>
-        <template mode="any">/layouts/layout_summary_template.xhtml</template>
-      </templates>
-      <rows>
-        <row>
-          <widget>summary_audio_player</widget>
-          <!-- full layout override to insert the following widget -->
-          <widget>summary_media_transcription</widget>
-          <widget>summary_current_document_files</widget>
-          <widget>summary_current_document_comments</widget>
-        </row>
-        <row>
-          <widget>summary_current_document_description</widget>
-          <widget>summary_current_document_states</widget>
-          <widget>summary_current_document_contributors</widget>
-          <widget>summary_current_document_custom_actions</widget>
-          <widget>summary_current_document_tagging</widget>
-          <widget>summary_current_document_relations</widget>
-        </row>
-        <row>
-          <widget>summary_current_document_publications</widget>
-        </row>
-        <row>
-          <widget>summary_current_document_single_tasks</widget>
-        </row>
-      </rows>
-    </layout>
+  <extension target="org.nuxeo.ecm.platform.actions.ActionService"
+    point="actions">
+    <action id="summary_media_transcription" type="widget" order="52">
+      <category>SUMMARY_PANEL_LEFT</category>
+      <properties>
+        <property name="widgetName">summary_media_transcription</property>
+      </properties>
+      <filter id="hasVideoOrAudio">
+        <rule grant="true">
+          <schema>audio</schema>
+          <schema>video</schema>
+        </rule>
+      </filter>
+    </action>
   </extension>
+
 </component>
