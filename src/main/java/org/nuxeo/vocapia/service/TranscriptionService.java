@@ -81,15 +81,23 @@ public class TranscriptionService extends DefaultComponent {
 
     @Override
     public void activate(ComponentContext context) throws Exception {
-        String url = System.getenv("NUXEO_VOCAPIA_SERVICE_URL");
+        String url = getFromEnvOrProperty("NUXEO_VOCAPIA_SERVICE_URL");
         if (url == null || url.isEmpty()) {
             throw new RuntimeException(
                     "NUXEO_VOCAPIA_SERVICE_URL environment variable is undefined");
         }
         serviceUrl = new URI(url);
-        username = System.getenv("NUXEO_VOCAPIA_SERVICE_USERNAME");
-        password = System.getenv("NUXEO_VOCAPIA_SERVICE_PASSWORD");
+        username = getFromEnvOrProperty("NUXEO_VOCAPIA_SERVICE_USERNAME");
+        password = getFromEnvOrProperty("NUXEO_VOCAPIA_SERVICE_PASSWORD");
         initHttpClient(serviceUrl);
+    }
+
+    public String getFromEnvOrProperty(String envVariableName) {
+        String value = System.getenv(envVariableName);
+        if (value == null) {
+            value = Framework.getProperty(envVariableName.toLowerCase().replaceAll("_", "."));
+        }
+        return value;
     }
 
     @Override
