@@ -101,9 +101,16 @@ public class TranscriptionService extends DefaultComponent {
                     10, TimeUnit.SECONDS);
         }
         httpClient = null;
+        serviceUrl = null;
+        username = null;
+        password = null;
     }
 
     public void launchTranscription(DocumentLocation docLoc) {
+        if (serviceUrl == null) {
+            throw new RuntimeException(
+                    "TranscriptionService failed to initialize properly.");
+        }
         WorkManager workManager = Framework.getLocalService(WorkManager.class);
         workManager.schedule(makeWork(docLoc),
                 Scheduling.IF_NOT_RUNNING_OR_SCHEDULED);
