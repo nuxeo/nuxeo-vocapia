@@ -121,10 +121,10 @@ public class TranscriptionWork extends AbstractWork {
         }
 
         Blob audioContent = sourceMedia;
-        if ("audio/mpeg".equals(audioContent.getMimeType())) {
+        if (audioContent.getFilename() == null
+                || !audioContent.getFilename().endsWith(".mp3")) {
             // Convert the soundtrack of the source media as MP3 for submission
-            // to
-            // the transcription service
+            // to the transcription service
             setStatus("soundtrack_extraction");
             audioContent = extractSoundTrack(sourceMedia);
         }
