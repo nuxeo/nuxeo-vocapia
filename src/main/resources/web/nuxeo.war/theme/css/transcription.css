@@ -1,0 +1,11 @@
+
+
+p.transcription {
+	max-height: 400px;
+    overflow: auto;
+    margin-bottom: 2em;
+}
+
+p.transcription span:hover {
+	color: #333;
+}

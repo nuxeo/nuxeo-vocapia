@@ -5,9 +5,11 @@ Bundle-ClassPath: .
 Bundle-Version: 5.6.qualifier
 Bundle-Name: nuxeo-vocapia
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: org.nuxeo.vocapia;singleton:=true
 Nuxeo-Component: OSGI-INF/extensions/org.nuxeo.vocapia.service.TranscriptionService.xml,
  OSGI-INF/transcription-core-types-contrib.xml,
  OSGI-INF/transcription-commandline-contrib.xml,
- OSGI-INF/transcription-layouts-contrib.xml
+ OSGI-INF/transcription-layouts-contrib.xml,
+ OSGI-INF/transcription-theme-contrib.xml
+Bundle-SymbolicName: org.nuxeo.vocapia;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+

@@ -12,12 +12,30 @@
   <h3 class="summaryTitle">#{messages['heading.speechTranscription']}</h3>
 
   <c:if test="#{value.hasFacet('HasSpeechTranscription')}">
-  <div class="transcription" style="max-height: 400px; overflow-y: auto; margin-bottom: 2em">
+  <p dir="#{value.dc.language == 'ar' ? 'RTL' : 'LTR'}"
+   class="transcription">
     <ui:repeat value="#{value.trans.sections}" var="section">
-      <p dir="#{value.dc.language == 'ar' ? 'RTL' : 'LTR'}">
-        <h:outputText value="#{section.text}" /></p>
+      <span class="mediaAudioTranscriptionSection" timecode="#{section.timecode_start}"
+      ><h:outputText value="#{section.text}" /></span>
     </ui:repeat>
-  </div>
+  </p>
+  
+  <script type="text/javascript"><!--
+    jQuery(document).ready(function() {
+   	  var videoJsElement = jQuery(".video-js");
+   	  if (videoJsElement.length > 0 && videoJsElement[0].player !== 'undefined') {
+   	    var videoPlayer = videoJsElement[0].player;
+   	    jQuery('.mediaAudioTranscriptionSection').css('cursor', 'pointer');
+   	    jQuery('.mediaAudioTranscriptionSection').click(function() {
+   	      videoPlayer.currentTime(parseFloat(jQuery(this).attr('timecode')));
+   	      videoPlayer.play();
+   	      return false;
+   	    });
+   	  }
+    });
+  -->
+  </script>
+
   </c:if>
 
   <p>

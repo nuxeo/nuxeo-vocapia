@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.vocapia.theme">
+
+  <extension target="org.nuxeo.theme.styling.service" point="pages">
+
+    <themePage name="*">
+      <defaultFlavor>default</defaultFlavor>
+      <flavors>
+        <flavor>default</flavor>
+      </flavors>
+      <styles append="true">
+        <style>transcription.css</style>
+      </styles>
+    </themePage>
+
+  </extension>
+
+  <extension target="org.nuxeo.theme.styling.service" point="styles">
+
+    <style name="transcription.css">
+      <src>themes/css/semantic_entities.css</src>
+    </style>
+
+  </extension>
+
+
+</component>
