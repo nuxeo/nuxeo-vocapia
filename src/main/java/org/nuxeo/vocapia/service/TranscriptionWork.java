@@ -10,6 +10,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
@@ -32,6 +33,7 @@ import org.nuxeo.ecm.core.api.blobholder.SimpleBlobHolder;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.api.impl.blob.StreamingBlob;
 import org.nuxeo.ecm.core.convert.api.ConversionService;
+import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.core.work.AbstractWork;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.services.streaming.FileSource;
@@ -218,8 +220,8 @@ public class TranscriptionWork extends AbstractWork {
             url += String.format("&model=%s", model);
         }
         HttpPut request = new HttpPut(url);
-        request.getParams().setBooleanParameter("http.protocol.expect-continue",
-                true);
+        request.getParams().setBooleanParameter(
+                "http.protocol.expect-continue", true);
 
         try {
             if (username != null && password != null) {
@@ -281,6 +283,34 @@ public class TranscriptionWork extends AbstractWork {
                     }
                     doc.setPropertyValue(TRANS_SECTIONS,
                             transcription.getSections());
+
+                    // Temporary fix to make it possible to do a semantic
+                    // analysis of the transcription.
+                    if (!doc.hasFacet(FacetNames.HAS_RELATED_TEXT)) {
+                        doc.addFacet(FacetNames.HAS_RELATED_TEXT);
+                    }
+                    @SuppressWarnings("unchecked")
+                    List<Map<String, String>> resources = doc.getProperty(
+                            "relatedtext:relatedtextresources").getValue(
+                            List.class);
+                    boolean updated = false;
+                    for (Map<String, String> relatedResource : resources) {
+                        if (relatedResource.get("relatedtextid").equals(
+                                "transcription")) {
+                            relatedResource.put("relatedtext",
+                                    transcription.getText());
+                            updated = true;
+                            break;
+                        }
+                    }
+                    if (!updated) {
+                        Map<String, String> m = new HashMap<String, String>();
+                        m.put("relatedtextid", "transcription");
+                        m.put("relatedtext", transcription.getText());
+                        resources.add(m);
+                    }
+                    doc.setPropertyValue("relatedtext:relatedtextresources",
+                            (Serializable) resources);
                     session.saveDocument(doc);
                 }
             }

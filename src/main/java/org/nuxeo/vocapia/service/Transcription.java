@@ -20,6 +20,8 @@ public class Transcription {
     public static final String TEXT = "text";
 
     public static final String SPEAKER_ID = "speaker_id";
+    
+    public final StringBuilder text = new StringBuilder();
 
     protected ArrayList<Map<String, Object>> sections = new ArrayList<Map<String, Object>>();
 
@@ -35,6 +37,8 @@ public class Transcription {
         section.put(TEXT, text);
         section.put(SPEAKER_ID, speakerId);
         sections.add(section);
+        this.text.append(text);
+        this.text.append("\n");
         return this;
     }
 
@@ -67,4 +71,7 @@ public class Transcription {
         doc.setPropertyValue(TranscriptionWork.TRANS_SECTIONS, sections);
     }
 
+    public String getText() {
+        return text.toString().trim();
+    }
 }
