@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +58,9 @@ public class TranscriptionWork extends AbstractWork {
 
     protected final HttpClient httpClient;
 
-    protected final Map<String, String> shortToLongLangCodes = new LinkedHashMap<String, String>();
+    protected final Map<String, String> shortToLongLangCodes;
 
-    protected final Map<String, String> longToShortLangCodes = new LinkedHashMap<String, String>();
+    protected final Map<String, String> longToShortLangCodes;
 
     protected URI serviceUrl;
 
@@ -71,25 +70,16 @@ public class TranscriptionWork extends AbstractWork {
 
     public TranscriptionWork(DocumentLocation docLoc, String blobPropertyPath,
             HttpClient httpClient, URI serviceUrl, String username,
-            String password) {
+            String password, Map<String, String> shortToLongLangCodes,
+            Map<String, String> longToShortLangCodes) {
         this.docLoc = docLoc;
         this.blobPropertyPath = blobPropertyPath;
         this.httpClient = httpClient;
         this.serviceUrl = serviceUrl;
         this.username = username;
         this.password = password;
-
-        shortToLongLangCodes.put("ar", "ara");
-        shortToLongLangCodes.put("en", "eng");
-        shortToLongLangCodes.put("fr", "fre");
-        updateLongToShortLangCodes();
-    }
-
-    protected void updateLongToShortLangCodes() {
-        longToShortLangCodes.clear();
-        for (Map.Entry<String, String> entry : shortToLongLangCodes.entrySet()) {
-            longToShortLangCodes.put(entry.getValue(), entry.getKey());
-        }
+        this.shortToLongLangCodes = shortToLongLangCodes;
+        this.longToShortLangCodes = longToShortLangCodes;
     }
 
     @Override
@@ -107,7 +97,6 @@ public class TranscriptionWork extends AbstractWork {
         if (isSuspending()) {
             return;
         }
-
         if (sourceMedia == null) {
             log.warn(String.format(
                     "Speech transcription aborted: no media found for property '%s' on document '%s'",
@@ -133,7 +122,6 @@ public class TranscriptionWork extends AbstractWork {
         if (isSuspending()) {
             return;
         }
-
         String detectedLanguage = null;
         Transcription transcription = null;
         try {
@@ -147,9 +135,20 @@ public class TranscriptionWork extends AbstractWork {
                     return;
                 }
             }
+            if (language == null || language.trim().isEmpty()) {
+                log.warn("Could not detect the language for "
+                        + sourceMedia.getFilename()
+                        + ": skipping transcription.");
+                state = FAILED;
+                return;
+            }
             // Perform the actual transcription
             setStatus("speech_transcription");
             transcription = performTranscription(audioContent, language);
+            if (transcription == null) {
+                log.warn("Could not find a transcription model for language '"
+                        + language + "' for media: " + sourceMedia.getFilename());
+            }
             if (isSuspending()) {
                 return;
             }
@@ -200,6 +199,13 @@ public class TranscriptionWork extends AbstractWork {
         AudioDoc result = callService("vrbs_lid", null, mediaContent);
         String longLanguage = result.getLanguage();
         if (longLanguage == null) {
+            log.warn("Failed to detect a language on: "
+                    + mediaContent.getFilename());
+            return null;
+        }
+        if (!longToShortLangCodes.containsKey(longLanguage)) {
+            log.warn("Language detector detected an unsupported language: "
+                    + longLanguage + " on " + mediaContent.getFilename());
             return null;
         }
         return longToShortLangCodes.get(longLanguage);
@@ -207,8 +213,11 @@ public class TranscriptionWork extends AbstractWork {
 
     protected Transcription performTranscription(Blob mediaContent,
             String language) {
-        AudioDoc result = callService("vrbs_trans",
-                shortToLongLangCodes.get(language), mediaContent);
+        String modelName = shortToLongLangCodes.get(language);
+        if (modelName == null) {
+            return null;
+        }
+        AudioDoc result = callService("vrbs_trans", modelName, mediaContent);
         return result.asTranscription();
     }
 
@@ -278,39 +287,42 @@ public class TranscriptionWork extends AbstractWork {
                     if (detectedLanguage != null) {
                         doc.setPropertyValue(DC_LANGUAGE, detectedLanguage);
                     }
-                    if (!doc.hasFacet(HAS_SPEECH_TRANSCRIPTION)) {
-                        doc.addFacet(HAS_SPEECH_TRANSCRIPTION);
-                    }
-                    doc.setPropertyValue(TRANS_SECTIONS,
-                            transcription.getSections());
-
-                    // Temporary fix to make it possible to do a semantic
-                    // analysis of the transcription.
-                    if (!doc.hasFacet(FacetNames.HAS_RELATED_TEXT)) {
-                        doc.addFacet(FacetNames.HAS_RELATED_TEXT);
-                    }
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, String>> resources = doc.getProperty(
-                            "relatedtext:relatedtextresources").getValue(
-                            List.class);
-                    boolean updated = false;
-                    for (Map<String, String> relatedResource : resources) {
-                        if (relatedResource.get("relatedtextid").equals(
-                                "transcription")) {
-                            relatedResource.put("relatedtext",
-                                    transcription.getText());
-                            updated = true;
-                            break;
+                    if (transcription != null) {
+                        if (!doc.hasFacet(HAS_SPEECH_TRANSCRIPTION)) {
+                            doc.addFacet(HAS_SPEECH_TRANSCRIPTION);
                         }
+                        doc.setPropertyValue(TRANS_SECTIONS,
+                                transcription.getSections());
+
+                        // Temporary fix to make it possible to do a semantic
+                        // analysis of the transcription.
+                        if (!doc.hasFacet(FacetNames.HAS_RELATED_TEXT)) {
+                            doc.addFacet(FacetNames.HAS_RELATED_TEXT);
+                        }
+                        @SuppressWarnings("unchecked")
+                        List<Map<String, String>> resources = doc.getProperty(
+                                "relatedtext:relatedtextresources").getValue(
+                                List.class);
+                        boolean updated = false;
+                        for (Map<String, String> relatedResource : resources) {
+                            if (relatedResource.get("relatedtextid").equals(
+                                    "transcription")) {
+                                relatedResource.put("relatedtext",
+                                        transcription.getText());
+                                updated = true;
+                                break;
+                            }
+                        }
+                        if (!updated) {
+                            Map<String, String> m = new HashMap<String, String>();
+                            m.put("relatedtextid", "transcription");
+                            m.put("relatedtext", transcription.getText());
+                            resources.add(m);
+                        }
+                        doc.setPropertyValue(
+                                "relatedtext:relatedtextresources",
+                                (Serializable) resources);
                     }
-                    if (!updated) {
-                        Map<String, String> m = new HashMap<String, String>();
-                        m.put("relatedtextid", "transcription");
-                        m.put("relatedtext", transcription.getText());
-                        resources.add(m);
-                    }
-                    doc.setPropertyValue("relatedtext:relatedtextresources",
-                            (Serializable) resources);
                     session.saveDocument(doc);
                 }
             }

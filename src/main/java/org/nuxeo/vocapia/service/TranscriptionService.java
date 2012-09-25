@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package org.nuxeo.vocapia.service;
@@ -11,6 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.HttpClient;
@@ -46,6 +48,10 @@ public class TranscriptionService extends DefaultComponent {
     protected String username;
 
     protected String password;
+
+    protected Map<String, String> shortToLongLangCodes = new LinkedHashMap<String, String>();
+
+    protected final Map<String, String> longToShortLangCodes = new LinkedHashMap<String, String>();
 
     protected void initHttpClient(URI serviceUrl)
             throws KeyManagementException, UnrecoverableKeyException,
@@ -90,6 +96,19 @@ public class TranscriptionService extends DefaultComponent {
         username = getFromEnvOrProperty("NUXEO_VOCAPIA_SERVICE_USERNAME");
         password = getFromEnvOrProperty("NUXEO_VOCAPIA_SERVICE_PASSWORD");
         initHttpClient(serviceUrl);
+
+        // TODO: use an extension point instead
+        shortToLongLangCodes.put("ar", "ara");
+        shortToLongLangCodes.put("en", "eng");
+        shortToLongLangCodes.put("fr", "fre");
+        updateLongToShortLangCodes();
+    }
+
+    protected void updateLongToShortLangCodes() {
+        longToShortLangCodes.clear();
+        for (Map.Entry<String, String> entry : shortToLongLangCodes.entrySet()) {
+            longToShortLangCodes.put(entry.getValue(), entry.getKey());
+        }
     }
 
     public String getFromEnvOrProperty(String envVariableName) {
@@ -112,6 +131,8 @@ public class TranscriptionService extends DefaultComponent {
         serviceUrl = null;
         username = null;
         password = null;
+        shortToLongLangCodes.clear();
+        longToShortLangCodes.clear();
     }
 
     public void launchTranscription(DocumentLocation docLoc) {
@@ -124,9 +145,14 @@ public class TranscriptionService extends DefaultComponent {
                 Scheduling.IF_NOT_RUNNING_OR_SCHEDULED);
     }
 
-    private TranscriptionWork makeWork(DocumentLocation docLoc) {
+    public boolean isSupportedLangage(String language) {
+        return shortToLongLangCodes.containsKey(language);
+    }
+
+    protected TranscriptionWork makeWork(DocumentLocation docLoc) {
         return new TranscriptionWork(docLoc, MEDIA_BLOB_PATH, httpClient,
-                serviceUrl, username, password);
+                serviceUrl, username, password, shortToLongLangCodes,
+                longToShortLangCodes);
     }
 
     public TranscriptionStatus getTranscriptionStatus(DocumentLocation docLoc) {

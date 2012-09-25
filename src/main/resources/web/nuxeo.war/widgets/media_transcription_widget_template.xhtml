@@ -38,16 +38,23 @@
 
   </c:if>
 
-  <p>
+  <p style="margin: 2em;">
   <nxu:set var="transcriptionStatus"
     value="#{transcriptionActions.getTranscriptionStatus(value)}">
     <c:if test="#{not empty transcriptionStatus}">
       #{transcriptionActions.getStatusMessageFor(transcriptionStatus)}
     </c:if>
     <c:if test="#{empty transcriptionStatus}">
-      <h:commandButton value="#{messages['action.media.launchTranscription']}"
-        action="#{transcriptionActions.launchTranscription(value)}"
-        class="button smallButton" />
+      <c:if test="#{transcriptionActions.canLaunchTranscription(value)}">
+        <h:commandButton value="#{messages['action.media.launchTranscription']}"
+          action="#{transcriptionActions.launchTranscription(value)}"
+          class="button smallButton" />
+      </c:if>
+      <c:if test="#{not transcriptionActions.canLaunchTranscription(value)}">
+        <h:outputFormat value="#{messages['label.transcription.unsupportedForLanguage']}">
+          <f:param value="#{value.dc.language}"/>
+        </h:outputFormat>
+      </c:if>
     </c:if>
   </nxu:set>
   </p>
