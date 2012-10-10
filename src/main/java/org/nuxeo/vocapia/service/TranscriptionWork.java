@@ -29,9 +29,14 @@ import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.api.blobholder.SimpleBlobHolder;
+import org.nuxeo.ecm.core.api.event.CoreEventConstants;
+import org.nuxeo.ecm.core.api.event.DocumentEventCategories;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.api.impl.blob.StreamingBlob;
 import org.nuxeo.ecm.core.convert.api.ConversionService;
+import org.nuxeo.ecm.core.event.Event;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.core.work.AbstractWork;
 import org.nuxeo.runtime.api.Framework;
@@ -41,6 +46,8 @@ import org.nuxeo.runtime.transaction.TransactionHelper;
 import org.nuxeo.vocapia.service.xml.AudioDoc;
 
 public class TranscriptionWork extends AbstractWork {
+
+    public static final String EVENT_TRANSCRIPTION_COMPLETE = "TRANSCRIPTION_COMPLETE";
 
     public static final String HAS_SPEECH_TRANSCRIPTION = "HasSpeechTranscription";
 
@@ -324,6 +331,20 @@ public class TranscriptionWork extends AbstractWork {
                                 (Serializable) resources);
                     }
                     session.saveDocument(doc);
+
+                    // Notify transcription completion to make it possible to
+                    // chain processing.
+                    DocumentEventContext ctx = new DocumentEventContext(
+                            session, getPrincipal(), doc);
+                    ctx.setProperty(CoreEventConstants.REPOSITORY_NAME,
+                            repositoryName);
+                    ctx.setProperty(CoreEventConstants.SESSION_ID,
+                            session.getSessionId());
+                    ctx.setProperty("category",
+                            DocumentEventCategories.EVENT_DOCUMENT_CATEGORY);
+                    Event event = ctx.newEvent(EVENT_TRANSCRIPTION_COMPLETE);
+                    EventService eventService = Framework.getLocalService(EventService.class);
+                    eventService.fireEvent(event);
                 }
             }
         }.runUnrestricted();
