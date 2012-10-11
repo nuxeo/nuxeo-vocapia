@@ -21,6 +21,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
+import org.nuxeo.common.collections.ScopeType;
+import org.nuxeo.common.utils.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
@@ -47,7 +49,7 @@ import org.nuxeo.vocapia.service.xml.AudioDoc;
 
 public class TranscriptionWork extends AbstractWork {
 
-    public static final String EVENT_TRANSCRIPTION_COMPLETE = "TRANSCRIPTION_COMPLETE";
+    public static final String EVENT_TRANSCRIPTION_COMPLETE = "TranscriptionComplete";
 
     public static final String HAS_SPEECH_TRANSCRIPTION = "HasSpeechTranscription";
 
@@ -330,6 +332,10 @@ public class TranscriptionWork extends AbstractWork {
                                 "relatedtext:relatedtextresources",
                                 (Serializable) resources);
                     }
+                    String comment = "Automated transcription from language: "
+                            + doc.getPropertyValue(DC_LANGUAGE);
+                    doc.getContextData().putScopedValue(ScopeType.REQUEST,
+                            "comment", comment);
                     session.saveDocument(doc);
 
                     // Notify transcription completion to make it possible to
