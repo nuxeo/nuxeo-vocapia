@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.UnmarshalException;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -256,7 +258,14 @@ public class TranscriptionWork extends AbstractWork {
             String body = IOUtils.toString(content);
             content.close();
             if (response.getStatusLine().getStatusCode() == 200) {
-                return AudioDoc.readFrom(body);
+                try {
+                    return AudioDoc.readFrom(body);
+                } catch (UnmarshalException e) {
+                    String errorMsg = String.format(
+                            "Invalid response from '%s': %s\n %s", url,
+                            response.getStatusLine().toString(), body);
+                    throw new IOException(errorMsg);
+                }
             } else {
                 String errorMsg = String.format(
                         "Unexpected response from '%s': %s\n %s", url,
