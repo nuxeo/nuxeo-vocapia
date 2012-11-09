@@ -45,7 +45,6 @@ import org.nuxeo.ecm.core.work.AbstractWork;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.services.streaming.FileSource;
 import org.nuxeo.runtime.services.streaming.StreamSource;
-import org.nuxeo.runtime.transaction.TransactionHelper;
 import org.nuxeo.vocapia.service.xml.AudioDoc;
 
 public class TranscriptionWork extends AbstractWork {
@@ -117,9 +116,7 @@ public class TranscriptionWork extends AbstractWork {
 
         // Release the current transaction as the following calls will be very
         // long and won't need access to any persistent transactional resources
-        if (isTransactional()) {
-            TransactionHelper.commitOrRollbackTransaction();
-        }
+        commitOrRollbackTransaction();
 
         Blob audioContent = sourceMedia;
         if (audioContent.getFilename() == null
@@ -170,9 +167,7 @@ public class TranscriptionWork extends AbstractWork {
 
         // Save the results back on the document in a new, short-lived
         // transaction
-        if (isTransactional()) {
-            TransactionHelper.startTransaction();
-        }
+        startTransaction();
         setStatus("saving_results");
         saveResults(detectedLanguage, transcription);
     }
