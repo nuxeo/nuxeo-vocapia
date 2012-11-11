@@ -9,7 +9,8 @@ Nuxeo-Component: OSGI-INF/extensions/org.nuxeo.vocapia.service.TranscriptionServ
  OSGI-INF/transcription-core-types-contrib.xml,
  OSGI-INF/transcription-commandline-contrib.xml,
  OSGI-INF/transcription-layouts-contrib.xml,
- OSGI-INF/transcription-theme-contrib.xml
+ OSGI-INF/transcription-theme-contrib.xml,
+ OSGI-INF/transcription-listeners-contrib.xml
 Bundle-SymbolicName: org.nuxeo.vocapia;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 

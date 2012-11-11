@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.vocapia.coreListeners">
+
+  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="listener">
+
+    <listener name="transcriptionListener" async="false" postCommit="true"
+      class="org.nuxeo.vocapia.listener.TranscriptionListener"
+      priority="30">
+      <event>documentCreated</event>
+      <event>documentModified</event>
+    </listener>
+
+  </extension>
+
+</component>
