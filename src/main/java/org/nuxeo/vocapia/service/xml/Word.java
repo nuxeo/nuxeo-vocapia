@@ -14,6 +14,7 @@
  */
 package org.nuxeo.vocapia.service.xml;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -21,6 +22,10 @@ import javax.xml.bind.annotation.XmlValue;
 public class Word {
 
     private String text;
+
+    protected double startTime = 0;
+
+    protected double duration = 0;
 
     @XmlValue
     public String getText() {
@@ -31,4 +36,21 @@ public class Word {
         this.text = text;
     }
 
+    @XmlAttribute(name = "stime")
+    public Double getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Double startTime) {
+        this.startTime = startTime;
+    }
+
+    @XmlAttribute(name = "dur")
+    public Double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Double duration) {
+        this.duration = duration;
+    }
 }

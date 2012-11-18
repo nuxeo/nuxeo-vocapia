@@ -57,9 +57,11 @@ public class AudioDoc {
     public Transcription asTranscription() {
         Transcription transcription = Transcription.emptyTranscription();
         for (Segment segment : segments) {
-            transcription.appendSection(segment.getStartTime(),
-                    segment.getEndTime(), segment.getText(),
-                    segment.getSpeakerId());
+            for (Segment shortSegment : segment.getAsShortSegments()) {
+                transcription.appendSection(shortSegment.getStartTime(),
+                        shortSegment.getEndTime(), shortSegment.getText(),
+                        shortSegment.getSpeakerId());
+            }
         }
         return transcription;
     }

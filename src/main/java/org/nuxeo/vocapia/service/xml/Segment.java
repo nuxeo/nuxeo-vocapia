@@ -15,19 +15,24 @@
 package org.nuxeo.vocapia.service.xml;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
 @XmlRootElement(name = "SpeechSegment")
 public class Segment {
 
+    public static final Double MAX_SEGMENT_DURATION = 3.0;
+
     protected String speakerId;
 
-    protected Double startTime;
+    protected double startTime = 0;
 
-    protected Double endTime;
+    protected double endTime = 0;
 
     protected String language;
 
@@ -71,9 +76,9 @@ public class Segment {
 
     public String getText() {
         StringBuffer sb = new StringBuffer();
-        for (Word word: words) {
+        for (Word word : words) {
             String w = word.getText().trim();
-            if (".".equals(w) || ",".equals(w) || ":".equals(w)) {
+            if (isPunctuation(w)) {
                 // Do not put a leading space.
                 sb.append(w);
             } else {
@@ -82,6 +87,11 @@ public class Segment {
             }
         }
         return sb.toString().trim();
+    }
+
+    protected boolean isPunctuation(String w) {
+        w = w.trim();
+        return ".".equals(w) || ",".equals(w) || ":".equals(w);
     }
 
     public Double getDuration() {
@@ -95,5 +105,40 @@ public class Segment {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public double duration() {
+        return endTime - startTime;
+    }
+
+    public List<Segment> getAsShortSegments() {
+        if (duration() < MAX_SEGMENT_DURATION) {
+            return Collections.singletonList(this);
+        }
+        List<Segment> shortSegments = new ArrayList<Segment>();
+        Segment s = new Segment();
+        s.startTime = startTime;
+        s.endTime = startTime;
+        s.speakerId = speakerId;
+        s.language = language;
+        shortSegments.add(s);
+        boolean durationExceeded = false;
+        for (Word w : words) {
+            if (durationExceeded && !isPunctuation(w.getText())) {
+                // create a new short segment
+                s = new Segment();
+                s.startTime = w.startTime;
+                s.speakerId = speakerId;
+                s.language = language;
+                shortSegments.add(s);
+                durationExceeded = false;
+            }
+            s.words.add(w);
+            s.endTime = w.startTime + w.duration;
+            if (s.duration() > MAX_SEGMENT_DURATION) {
+                durationExceeded = true;
+            }
+        }
+        return shortSegments;
     }
 }
